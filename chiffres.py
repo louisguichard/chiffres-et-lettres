@@ -27,13 +27,13 @@ def draw_numbers():
     return chiffres, target
 
 
-def le_compte_est_bon(timer=45, extra_time=0):
+def le_compte_est_bon(timer=45, extra_timer=0):
     """
     Main game function to setup and start Le Compte Est Bon game.
 
     Args:
         timer (int): Time limit for the player to solve the game, in seconds.
-        extra_time (int): Extra time added to the main timer for some players.
+        extra_timer (int): Extra time added to the main timer for some players.
 
     Returns:
         tuple: A tuple containing the list of numbers drawn and the target number.
@@ -43,7 +43,7 @@ def le_compte_est_bon(timer=45, extra_time=0):
     chiffres, target = draw_numbers()
     print(f"Cible: {target}")
     print(f"Chiffres: {' - '.join([str(c) for c in chiffres])}\n")
-    start_timer(timer, extra_time)
+    start_timer(timer, extra_timer)
     return chiffres, target
 
 
