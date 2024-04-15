@@ -7,9 +7,9 @@ from utils import play_bell, start_timer
 
 AVAILABLE_NUMBERS = [i for i in range(1, 11)] * 2 + [25, 50, 75, 100]
 OPERATIONS = {
-    "+": lambda x, y: x + y if x >= y else None,
+    "+": lambda x, y: x + y,
     "-": lambda x, y: x - y if x > y else None,
-    "x": lambda x, y: x * y if x <= y else None,
+    "x": lambda x, y: x * y,
     "/": lambda x, y: x // y if y != 0 and x % y == 0 else None,
 }
 
@@ -84,11 +84,15 @@ def solve_lceb(numbers, target):
     best_diff = float("inf")
     best_solution = None
 
-    # Explore all combinations of numbers and operations.
-    for num_count in range(2, len(numbers) + 1):
-        for combo in itertools.permutations(numbers, num_count):
-            for ops in itertools.product(OPERATIONS, repeat=len(combo) - 1):
-                result, steps = evaluate_expression(combo, ops)
+    # Explore all combinations of numbers and operations
+    for num_count in range(2, len(numbers) + 1):  # count of numbers used
+        for combination in itertools.permutations(
+            numbers, num_count
+        ):  # all possible combinations
+            for ops in itertools.product(
+                OPERATIONS, repeat=len(combination) - 1
+            ):  # all possible operations
+                result, steps = evaluate_expression(combination, ops)
                 if result is None:  # skip invalid operations
                     continue
                 if result == target:  # return exact solution
