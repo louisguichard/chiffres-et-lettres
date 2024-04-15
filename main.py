@@ -1,5 +1,5 @@
-from numbers import le_compte_est_bon
-from letters import le_mot_le_plus_long
+from chiffres import le_compte_est_bon
+from lettres import le_mot_le_plus_long
 
 MENU = {
     "message": "A quoi voulez-vous jouer ?\n[1] Chiffres\n[2] Lettres\n",
