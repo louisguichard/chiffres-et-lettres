@@ -1,21 +1,42 @@
-from chiffres import le_compte_est_bon
-from lettres import le_mot_le_plus_long
+from chiffres import le_compte_est_bon, solve_lceb
+from lettres import le_mot_le_plus_long, solve_lmlpl
 
-MENU = {
-    "message": "A quoi voulez-vous jouer ?\n[1] Chiffres\n[2] Lettres\n",
-    "actions": {"1": "chiffres", "2": "lettres"},
+MENUS = {
+    "start": {
+        "message": "Par quoi voulez-vous commencer ?\n[1] Chiffres\n[2] Lettres\n> ",
+        "actions": {"1": "chiffres", "2": "lettres"},
+    },
+    "numbers": {
+        "message": "[1] Voir la meilleure solution\n[2] Recommencer les chiffres\n[3] Passer aux lettres\n> ",
+        "actions": {"1": "solution", "2": "chiffres", "3": "lettres"},
+    },
+    "numbers_sol": {
+        "message": "[1] Recommencer les chiffres\n[2] Passer aux lettres\n> ",
+        "actions": {"1": "chiffres", "2": "lettres"},
+    },
+    "letters": {
+        "message": "[1] Voir la meilleure solution\n[2] Passer aux chiffres\n[3] Recommencer les lettres\n> ",
+        "actions": {"1": "solution", "2": "chiffres", "3": "lettres"},
+    },
+    "letters_sol": {
+        "message": "[1] Passer aux chiffres\n[2] Recommencer les lettres\n> ",
+        "actions": {"1": "chiffres", "2": "lettres"},
+    },
 }
 
 
-def get_user_choice():
+def get_user_choice(menu):
     """
     Function to display menu and get user action.
+
+    Args:
+        menu (str): Key for the menu dictionary.
 
     Returns:
         str: User selected action from the menu.
     """
     try:
-        return MENU["actions"].get(input(MENU["message"]))
+        return MENUS[menu]["actions"].get(input(MENUS[menu]["message"]))
     except KeyboardInterrupt:
         quit
 
@@ -28,16 +49,22 @@ def main():
     while action:
         if action == "chiffres":
             try:
-                le_compte_est_bon(timer=45, extra_timer=30)
+                numbers, target = le_compte_est_bon(timer=45, extra_timer=30)
             except KeyboardInterrupt:
                 pass
             action = get_user_choice("numbers")
+            if action == "solution":
+                print("\n" + solve_lceb(numbers, target) + "\n")
+                action = get_user_choice("numbers_sol")
         elif action == "lettres":
             try:
-                le_mot_le_plus_long(timer=30, extra_timer=0)
+                letters = le_mot_le_plus_long(timer=30, extra_timer=0)
             except KeyboardInterrupt:
                 pass
             action = get_user_choice("letters")
+            if action == "solution":
+                print("\n" + solve_lmlpl(letters) + "\n")
+                action = get_user_choice("letters_sol")
 
 
 if __name__ == "__main__":
