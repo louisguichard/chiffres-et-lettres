@@ -67,7 +67,7 @@ def solve_lmlpl(letters):
                 longest_words = [word]
             elif len(word) == len(longest_words[0]):
                 longest_words.append(word)
-    longest_words = set(longest_words)
+    longest_words = list(set(longest_words))
     if len(longest_words) <= 5:
         return f"En {len(longest_words[0])} lettres : {' / '.join(longest_words)}"
     return f"En {len(longest_words[0])} lettres : {' / '.join(longest_words[:5])} ..."
