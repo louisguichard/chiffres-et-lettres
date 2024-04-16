@@ -9,7 +9,7 @@ default:
 family:
   numbers:
     timer: 45
-    extra_timer: 30  # additional time for grandmother
+    extra_timer: 45  # additional time for grandmother
   letters:
-    timer: 30 
+    timer: 45
     extra_timer: 0

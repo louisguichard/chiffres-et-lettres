@@ -1,16 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <title>Des chiffres et des lettres</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            font-family: "Roboto", sans-serif;
+            font-weight: 100;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 60px;
+            color: #333;
+            margin: 20px 0;
+            padding: 0 40px;
+            font-family: "Roboto", sans-serif;
+            font-weight: 300;
+        }
+
         #numbers,
         #letters {
-            width: 50%;
-            height: 100vh;
-            /* Full height */
+            width: calc(50% - 60px);
+            height: calc(100vh - 80px - 90px);
+            margin: 30px;
+            padding: 20px;
+            box-sizing: border-box;
             float: left;
             display: flex;
             justify-content: center;
@@ -18,24 +43,34 @@
             font-size: 50px;
             color: white;
             cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 20px;
+            background: linear-gradient(to bottom, #efefef, #ddd);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         #numbers {
-            background-color: rgb(240, 72, 72);
+            background: linear-gradient(to bottom right, rgb(240, 40, 40), rgb(255, 120, 120));
         }
 
         #letters {
-            background-color: rgb(72, 72, 240);
+            background: linear-gradient(to bottom left, rgb(40, 40, 240), rgb(120, 120, 255));
+        }
+
+        #numbers:hover,
+        #letters:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 
 <body>
+    <h1>Des chiffres et des lettres</h1>
     <div id="numbers" onclick="location.href='/numbers'">Chiffres</div>
     <div id="letters" onclick="location.href='/letters'">Lettres</div>
 
     <script>
-        // JavaScript is minimal here, just for navigation
     </script>
 </body>
 
