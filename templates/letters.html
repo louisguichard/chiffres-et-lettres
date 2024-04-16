@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lettres</title>
+    <style>
+        body {
+            font-size: 30px;
+            /* Even larger font size */
+            color: white;
+            /* Better contrast with dark backgrounds */
+            text-align: center;
+            /* Centering text globally */
+            background-color: #3333ff;
+            /* Softer blue background */
+        }
+
+        #timer,
+        #actions,
+        #solution {
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 20px 40px;
+            /* Even larger padding for easier clicking */
+            font-size: 24px;
+            /* Larger font size for better visibility */
+        }
+
+        .solution {
+            background-color: #f4f4f4;
+            color: black;
+            /* Ensuring solution text is readable */
+            padding: 20px;
+            /* Increased padding */
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 26px;
+            /* Larger text in solutions */
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Le Mot Le Plus Long</h1>
+    <div id="gameInfo">
+        <p>Lettres disponibles : {{ letters|join(', ') }}</p>
+    </div>
+    <div id="timer">30</div>
+    <div id="solution" style="display:none;">
+        {{ solution|safe }}
+    </div>
+    <div id="actions" style="display:none;">
+        <button onclick="location.reload()">Nouvelle Partie</button>
+        <button onclick="location.href='/numbers'">Jouer aux chiffres</button>
+    </div>
+
+    <script>
+        let timeLeft = 30;
+        const timerElement = document.getElementById('timer');
+        const solutionElement = document.getElementById('solution');
+        const actionsElement = document.getElementById('actions');
+
+        const countdown = setInterval(function () {
+            timerElement.textContent = timeLeft;
+            timeLeft -= 1;
+            if (timeLeft < 0) {
+                clearInterval(countdown);
+                timerElement.style.display = 'none';
+                actionsElement.style.display = 'block';
+            }
+        }, 1000);
+
+        function showSolution() {
+            clearInterval(countdown);
+            timerElement.style.display = 'none';
+            solutionElement.style.display = 'block';
+            actionsElement.style.display = 'block';
+        }
+    </script>
+    <button onclick="showSolution()">Montrer la solution</button>
+
+</body>
+
+</html>

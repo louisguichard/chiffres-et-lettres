@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Des chiffres et des lettres</title>
+    <style>
+        #numbers,
+        #letters {
+            width: 50%;
+            height: 100vh;
+            /* Full height */
+            float: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #numbers {
+            background-color: rgb(232, 52, 52);
+        }
+
+        #letters {
+            background-color: rgb(55, 55, 240);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="numbers" onclick="location.href='/numbers'">Chiffres</div>
+    <div id="letters" onclick="location.href='/letters'">Lettres</div>
+
+    <script>
+        // JavaScript is minimal here, just for navigation
+    </script>
+</body>
+
+</html>

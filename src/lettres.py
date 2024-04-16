@@ -4,9 +4,9 @@ import json
 import random
 from unidecode import unidecode
 
-from utils import play_bell, start_timer
+from .utils import play_bell, start_timer
 
-with open("dictionnaire.json") as file:
+with open("src/dictionnaire.json") as file:
     dictionary = json.load(file)
 
 VOYELLES = "AEIOUY"

@@ -5,21 +5,6 @@ from chiffres import le_compte_est_bon, solve_lceb
 from lettres import le_mot_le_plus_long, solve_lmlpl
 
 
-def load_config(profile="default"):
-    """
-    Load configuration settings from the YAML config file.
-
-    Args:
-        profile (str): Configuration profile name.
-
-    Returns:
-        dict: Dictionary containing profile-specific configurations.
-    """
-    with open("config.yaml", "r") as file:
-        config = yaml.safe_load(file)
-    return config.get(profile)
-
-
 MENUS = {
     "start": {
         "message": "Par quoi voulez-vous commencer ?\n[1] Chiffres\n[2] Lettres\n> ",
@@ -42,6 +27,21 @@ MENUS = {
         "actions": {"1": "chiffres", "2": "lettres"},
     },
 }
+
+
+def load_config(profile="default"):
+    """
+    Load configuration settings from the YAML config file.
+
+    Args:
+        profile (str): Configuration profile name.
+
+    Returns:
+        dict: Dictionary containing profile-specific configurations.
+    """
+    with open("config.yaml", "r") as file:
+        config = yaml.safe_load(file)
+    return config.get(profile)
 
 
 def get_user_choice(menu):

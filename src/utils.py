@@ -1,7 +1,7 @@
 import time
 import simpleaudio as sa
 
-wave_obj = sa.WaveObject.from_wave_file("bell.wav")
+wave_obj = sa.WaveObject.from_wave_file("src/bell.wav")
 
 
 def play_bell(wait=None):

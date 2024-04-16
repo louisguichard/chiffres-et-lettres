@@ -3,7 +3,7 @@
 import random
 import itertools
 
-from utils import play_bell, start_timer
+from .utils import play_bell, start_timer
 
 AVAILABLE_NUMBERS = [i for i in range(1, 11)] * 2 + [25, 50, 75, 100]
 OPERATIONS = {
@@ -96,10 +96,9 @@ def solve_lceb(numbers, target):
                 if result is None:  # skip invalid operations
                     continue
                 if result == target:  # return exact solution
-                    return "\n".join(steps)
+                    return steps
                 diff = abs(target - result)
                 if diff < best_diff:
                     best_diff = diff
                     best_solution = steps
-
-    return "\n".join(best_solution)
+    return best_solution
