@@ -7,51 +7,45 @@
     <title>Lettres</title>
     <style>
         body {
-            font-size: 30px;
-            /* Even larger font size */
+            font-size: 38px;
             color: white;
-            /* Better contrast with dark backgrounds */
             text-align: center;
-            /* Centering text globally */
-            background-color: #3333ff;
-            /* Softer blue background */
+            background-color: rgb(72, 72, 240);
+        }
+
+        #gameInfo {
+            margin-bottom: 40px;
         }
 
         #timer,
         #actions,
         #solution {
-            margin-top: 20px;
+            margin-top: 40px;
         }
 
         button {
-            margin: 10px;
+            margin-top: 20px;
             padding: 20px 40px;
-            /* Even larger padding for easier clicking */
             font-size: 24px;
-            /* Larger font size for better visibility */
         }
 
         .solution {
             background-color: #f4f4f4;
             color: black;
-            /* Ensuring solution text is readable */
             padding: 20px;
-            /* Increased padding */
             margin-top: 10px;
             border-radius: 5px;
             font-size: 26px;
-            /* Larger text in solutions */
         }
     </style>
-
 </head>
 
 <body>
     <h1>Le Mot Le Plus Long</h1>
     <div id="gameInfo">
-        <p>Lettres disponibles : {{ letters|join(', ') }}</p>
+        <p>Lettres disponibles : {{ letters|join(' - ') }}</p>
     </div>
-    <div id="timer">30</div>
+    <div id="timer">Temps restant : </div>
     <div id="solution" style="display:none;">
         {{ solution|safe }}
     </div>
@@ -59,31 +53,51 @@
         <button onclick="location.reload()">Nouvelle Partie</button>
         <button onclick="location.href='/numbers'">Jouer aux chiffres</button>
     </div>
+    <button id="showSolutionButton" onclick="showSolution()">Montrer la solution</button>
+    <audio id="bellSound" src="/static/bell.wav" preload="auto"></audio>
 
     <script>
-        let timeLeft = 30;
+        const config = {
+            timer: parseInt('{{ timers.timer }}', 10),
+            extra_timer: parseInt('{{ timers.extra_timer }}', 10)
+        };
+        let timeLeft = config.timer + config.extra_timer
+        const bell = document.getElementById('bellSound');
         const timerElement = document.getElementById('timer');
         const solutionElement = document.getElementById('solution');
         const actionsElement = document.getElementById('actions');
+        const showSolutionButton = document.getElementById('showSolutionButton');
+        const finishedElement = document.createElement('div');
+        finishedElement.textContent = "Terminé!";
+        finishedElement.style.fontSize = "24px";
+        finishedElement.style.display = 'none';
+        document.body.insertBefore(finishedElement, actionsElement);
 
+        bell.play();
         const countdown = setInterval(function () {
-            timerElement.textContent = timeLeft;
+            if (timeLeft === config.timer) {
+                bell.play();
+            }
+            timerElement.textContent = "Temps restant : " + timeLeft;
             timeLeft -= 1;
-            if (timeLeft < 0) {
+            if (timeLeft <= 0) {
+                bell.play();
                 clearInterval(countdown);
                 timerElement.style.display = 'none';
-                actionsElement.style.display = 'block';
+                finishedElement.style.display = 'block';
             }
         }, 1000);
 
         function showSolution() {
             clearInterval(countdown);
-            timerElement.style.display = 'none';
             solutionElement.style.display = 'block';
+            solutionElement.innerHTML = '<em>Solution<br>- - - - - - -<br></em>' + '<em>{{ solution|safe }}</em>';
             actionsElement.style.display = 'block';
+            timerElement.style.display = 'none';
+            showSolutionButton.style.display = 'none';
+            finishedElement.style.display = 'none';
         }
     </script>
-    <button onclick="showSolution()">Montrer la solution</button>
 
 </body>
 

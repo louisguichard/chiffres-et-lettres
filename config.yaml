@@ -1,9 +1,9 @@
 default:
   numbers:
     timer: 45 
-    extra_timer: 0 
+    extra_timer: 0
   letters:
-    timer: 30 
+    timer: 30
     extra_timer: 0
 
 family:
