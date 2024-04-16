@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chiffres</title>
+    <style>
+        body {
+            font-size: 38px;
+            color: white;
+            text-align: center;
+            background-color: rgb(240, 72, 72);
+        }
+
+        #gameInfo {
+            margin-bottom: 40px;
+        }
+
+        #timer,
+        #actions,
+        #solution {
+            margin-top: 40px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 20px 40px;
+            font-size: 24px;
+        }
+
+        .solution {
+            background-color: #f4f4f4;
+            color: black;
+            padding: 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 26px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Le Compte Est Bon</h1>
+    <div id="gameInfo">
+        <p>Nombres disponibles : {{ numbers|join(' - ') }}</p>
+        <p>Cible : {{ target }}</p>
+    </div>
+    <div id="timer">Temps restant : {{ timers.default }}</div>
+    <div id="solution" style="display:none;">
+        {{ solution|safe }}
+    </div>
+    <div id="actions" style="display:none;">
+        <button onclick="location.reload()">Nouvelle Partie</button>
+        <button onclick="location.href='/letters'">Jouer aux lettres</button>
+    </div>
+    <button id="showSolutionButton" onclick="showSolution()">Montrer la solution</button>
+    <audio id="bellSound" src="/static/bell.wav" preload="auto"></audio>
+
+    <script>
+        const config = {
+            timer: parseInt('{{ timers.timer }}', 10),
+            extra_timer: parseInt('{{ timers.extra_timer }}', 10)
+        };
+        let timeLeft = config.timer + config.extra_timer
+        const bell = document.getElementById('bellSound');
+        const timerElement = document.getElementById('timer');
+        const solutionElement = document.getElementById('solution');
+        const actionsElement = document.getElementById('actions');
+        const showSolutionButton = document.getElementById('showSolutionButton');
+        const finishedElement = document.createElement('div');
+        finishedElement.textContent = "Terminé!";
+        finishedElement.style.fontSize = "24px";
+        finishedElement.style.display = 'none';
+        document.body.insertBefore(finishedElement, actionsElement);
+
+        bell.play();
+        const countdown = setInterval(function () {
+            if (timeLeft === config.timer) {
+                bell.play();
+            }
+            timerElement.textContent = "Temps restant : " + timeLeft;
+            timeLeft -= 1;
+            if (timeLeft <= 0) {
+                bell.play();
+                clearInterval(countdown);
+                timerElement.style.display = 'none';
+                finishedElement.style.display = 'block';
+            }
+        }, 1000);
+
+        function showSolution() {
+            clearInterval(countdown);
+            solutionElement.style.display = 'block';
+            solutionElement.innerHTML = '<em>Solution<br>- - - - - - -<br></em>' + '<em>{{ solution|safe }}</em>';
+            actionsElement.style.display = 'block';
+            timerElement.style.display = 'none';
+            showSolutionButton.style.display = 'none';
+            finishedElement.style.display = 'none';
+        }
+    </script>
+
+</body>
+
+</html>

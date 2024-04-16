@@ -6,9 +6,9 @@ A family-friendy adaptation of the French game "Des chiffres et des lettres". Ex
 
 To start the game: 
 ```
-python main.py
+python app.py
 ```
 or to launch a specific configuration:
 ```
-python main.py -p family
+python app.py -p family
 ```
