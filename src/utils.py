@@ -1,16 +1,13 @@
 import yaml
 
 
-def load_config(profile="default"):
+def load_config():
     """
     Load configuration settings from the YAML config file.
 
-    Args:
-        profile (str): Configuration profile name.
-
     Returns:
-        dict: Dictionary containing profile-specific configurations.
+        dict: Dictionary containing onfigurations.
     """
     with open("config.yaml", "r") as file:
         config = yaml.safe_load(file)
-    return config.get(profile)
+    return config

@@ -1,16 +1,11 @@
-import argparse
 from flask import Flask, render_template
 
 from src.chiffres import draw_numbers, solve_lceb
 from src.lettres import draw_letters, solve_lmlpl
 from src.utils import load_config
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--config_name", type=str, default="default")
-args = parser.parse_args()
-
 app = Flask(__name__)
-config = load_config(args.config_name)
+config = load_config()
 
 
 @app.route("/")

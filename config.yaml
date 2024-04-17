@@ -1,15 +1,6 @@
-default:
-  numbers:
-    timer: 45 
-    extra_timer: 0
-  letters:
-    timer: 30
-    extra_timer: 0
-
-family:
-  numbers:
-    timer: 45
-    extra_timer: 45  # additional time for grandmother
-  letters:
-    timer: 45
-    extra_timer: 0
+numbers:
+  timer: 45 
+  extra_timer: 0
+letters:
+  timer: 30
+  extra_timer: 0
