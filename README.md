@@ -8,7 +8,3 @@ To start the game:
 ```
 python app.py
 ```
-or to launch a specific configuration:
-```
-python app.py -p family
-```
