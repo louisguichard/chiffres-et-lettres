@@ -1,6 +1,6 @@
 letters:
-  extra_timer: '10'
-  timer: '20'
+  extra_timer: '0'
+  timer: '30'
 numbers:
-  extra_timer: '5'
-  timer: '10'
+  extra_timer: '0'
+  timer: '45'
