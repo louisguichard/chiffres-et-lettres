@@ -11,6 +11,8 @@
             color: white;
             text-align: center;
             background-color: rgb(120, 120, 255);
+            margin: 0;
+            padding-bottom: 60px;
         }
 
         #gameInfo {
@@ -32,7 +34,6 @@
             border: none;
             border-radius: 5px;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             cursor: pointer;
         }
 
@@ -43,7 +44,6 @@
 
         button:focus {
             outline: none;
-            box-shadow: 0 0 0 2px white, 0 0 0 4px #372bc0;
         }
 
         #timerBarContainer {
@@ -77,6 +77,40 @@
             border-radius: 5px;
             font-size: 26px;
         }
+
+        .home-button {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+            padding: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .home-button svg {
+            width: 40px;
+            height: 40px;
+            fill: #555;
+            transition: transform 0.3s ease;
+        }
+
+        .home-button:hover svg {
+            transform: scale(1.1);
+        }
+
+        .home-button:focus,
+        .home-button:active {
+            outline: none;
+            box-shadow: none;
+            background-color: transparent;
+        }
+
+        .home-button:hover {
+            background-color: transparent;
+        }
     </style>
 </head>
 
@@ -100,6 +134,11 @@
     </div>
     <button id="showSolutionButton" onclick="showSolution()">Montrer la solution</button>
     <audio id="bellSound" src="/static/bell.wav" preload="auto"></audio>
+    <button class="home-button" onclick="location.href='/'">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32 3.2L2.8 32H12v29h16V45h8v16h16V32h9.2z" />
+        </svg>
+    </button>
 
     <script>
         const config = {
