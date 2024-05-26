@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 import yaml
-
 from src.chiffres import draw_numbers, solve_lceb
 from src.lettres import draw_letters, solve_lmlpl
 
@@ -14,17 +13,21 @@ def home():
 
 @app.route("/config", methods=["GET"])
 def get_config():
-    with open("config.yaml", "r") as file:
-        config = yaml.safe_load(file)
+    config = request.cookies.get("config")
+    if config:
+        config = yaml.safe_load(config)
+    else:
+        with open("config.yaml", "r") as file:
+            config = yaml.safe_load(file)
     return config
 
 
 @app.route("/config", methods=["POST"])
 def save_config():
     config = request.json
-    with open("config.yaml", "w") as file:
-        yaml.safe_dump(config, file)
-    return "", 204
+    resp = make_response("", 204)
+    resp.set_cookie("config", yaml.safe_dump(config))
+    return resp
 
 
 @app.route("/numbers")
@@ -53,4 +56,4 @@ def letters_game():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=8080)
