@@ -201,9 +201,7 @@
                 <div id="timerBar"></div>
             </div>
         </div>
-        <div id="solution" style="display:none;">
-            {{ solution|safe }}
-        </div>
+        <div id="solution" style="display:none;"></div>
         <div id="actions" style="display:none;">
             <button onclick="location.reload()">Nouvelle Partie</button>
             <button onclick="location.href='/letters'">Jouer aux lettres</button>
@@ -260,19 +258,32 @@
             }
         }, 1000);
 
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/numbers_solution', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    numbers: {{ numbers| tojson }},
+            target: {{ target }}
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                solutionElement.innerHTML = '<em>Solution<br>- - - - - - -<br></em>' + data.solution;
+            });
+        });
+
         function showSolution() {
             clearInterval(countdown);
             solutionElement.style.display = 'block';
-            solutionElement.innerHTML = '<em>Solution<br>- - - - - - -<br></em>' + '<em>{{ solution|safe }}</em>';
             actionsElement.style.display = 'block';
             timerBarContainer.style.display = 'none';
             timerElement.style.display = 'none';
             showSolutionButton.style.display = 'none';
-            finishedElement.style.display = 'none';
-            document.getElementById('timerBarContainer').style.display = 'none';
         }
     </script>
-
 </body>
 
 </html>

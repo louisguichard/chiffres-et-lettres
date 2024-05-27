@@ -34,25 +34,37 @@ def save_config():
 def numbers_game():
     config = get_config()
     numbers, target = draw_numbers()
-    _, solution = solve_lceb(numbers, target)
-    solution_str = "<br>".join(solution)
     return render_template(
         "numbers.html",
         numbers=numbers,
         target=target,
-        solution=solution_str,
         timers=config["numbers"],
     )
+
+
+@app.route("/numbers_solution", methods=["POST"])
+def solve_numbers():
+    data = request.json
+    numbers = data.get("numbers")
+    target = data.get("target")
+    _, solution = solve_lceb(numbers, target)
+    solution_str = "<br>".join(solution)
+    return {"solution": solution_str}
 
 
 @app.route("/letters")
 def letters_game():
     config = get_config()
     letters = draw_letters()
+    return render_template("letters.html", letters=letters, timers=config["letters"])
+
+
+@app.route("/letters_solution", methods=["POST"])
+def solve_letters():
+    data = request.json
+    letters = data.get("letters")
     solution = solve_lmlpl(letters)
-    return render_template(
-        "letters.html", letters=letters, solution=solution, timers=config["letters"]
-    )
+    return {"solution": solution}
 
 
 if __name__ == "__main__":
