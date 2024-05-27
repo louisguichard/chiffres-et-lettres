@@ -1,12 +1,11 @@
 """Le Compte Est Bon"""
 
 import random
-import itertools
 
 AVAILABLE_NUMBERS = [i for i in range(1, 11)] * 2 + [25, 50, 75, 100]
 OPERATIONS = {
     "+": lambda x, y: x + y,
-    "-": lambda x, y: x - y if x > y else None,
+    "-": lambda x, y: x - y,
     "×": lambda x, y: x * y,
     "/": lambda x, y: x // y if y != 0 and x % y == 0 else None,
 }
@@ -25,58 +24,39 @@ def draw_numbers():
     return chiffres, target
 
 
-def evaluate_expression(numbers, operations):
-    """
-    Evaluates the mathematical expression defined by numbers and operations.
+def solve_lceb(numbers, target, best_result=None):
+    n = len(numbers)
+    for i in range(n):
+        for j in range(i + 1, n):
+            if i != j:
+                a, b = numbers[i], numbers[j]
+                x_min, x_max = min(a, b), max(a, b)
+                remaining = [numbers[k] for k in range(n) if k != i and k != j]
+                for op in OPERATIONS:
+                    result = OPERATIONS[op](x_max, x_min)
+                    if result is not None:
+                        expression = (
+                            f"{x_min} {op} {x_max} = {result}"
+                            if op == "×"
+                            else f"{x_max} {op} {x_min} = {result}"
+                        )
+                        if result == target or len(remaining) == 0:
+                            next_result, next_expr = result, []
+                        else:
+                            next_attempt = solve_lceb(
+                                remaining + [result], target, best_result
+                            )
+                            next_result, next_expr = next_attempt
 
-    Args:
-        numbers (list): The numbers used in the expression.
-        operations (list): The operations applied between numbers.
-
-    Returns:
-        tuple: A tuple of the result of the expression and the list of steps showing the calculation.
-    """
-    value = numbers[0]
-    steps = []
-    for i, operation in enumerate(operations):
-        next_number = numbers[i + 1]
-        new_value = OPERATIONS[operation](value, next_number)
-        if new_value is None:
-            return None, None  # invalid operation
-        steps.append(f"{value} {operation} {next_number} = {new_value}")
-        value = new_value
-    return value, steps
-
-
-def solve_lceb(numbers, target):
-    """
-    Find the best sequence of operations that approximates or matches the target number.
-
-    Args:
-        numbers (list): List of numbers to use.
-        target (int): Target number to reach.
-
-    Returns:
-        str: A string representing the best sequence that either matches or approximates the target.
-    """
-    best_diff = float("inf")
-    best_solution = None
-
-    # Explore all combinations of numbers and operations
-    for num_count in range(2, len(numbers) + 1):  # count of numbers used
-        for combination in itertools.permutations(
-            numbers, num_count
-        ):  # all possible combinations
-            for ops in itertools.product(
-                OPERATIONS, repeat=len(combination) - 1
-            ):  # all possible operations
-                result, steps = evaluate_expression(combination, ops)
-                if result is None:  # skip invalid operations
-                    continue
-                if result == target:  # return exact solution
-                    return steps
-                diff = abs(target - result)
-                if diff < best_diff:
-                    best_diff = diff
-                    best_solution = steps
-    return best_solution
+                        if best_result is None:
+                            best_result = (next_result, [expression] + next_expr)
+                        else:
+                            if next_result == target and len(
+                                [expression] + next_expr
+                            ) < len(best_result[1]):
+                                best_result = (next_result, [expression] + next_expr)
+                            elif best_result is None or abs(target - next_result) < abs(
+                                target - best_result[0]
+                            ):
+                                best_result = (next_result, [expression] + next_expr)
+    return best_result

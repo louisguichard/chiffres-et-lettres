@@ -34,7 +34,7 @@ def save_config():
 def numbers_game():
     config = get_config()
     numbers, target = draw_numbers()
-    solution = solve_lceb(numbers, target)
+    _, solution = solve_lceb(numbers, target)
     solution_str = "<br>".join(solution)
     return render_template(
         "numbers.html",
