@@ -51,12 +51,12 @@ def solve_lceb(numbers, target, best_result=None):
                         if best_result is None:
                             best_result = (next_result, [expression] + next_expr)
                         else:
-                            if next_result == target and len(
-                                [expression] + next_expr
-                            ) < len(best_result[1]):
-                                best_result = (next_result, [expression] + next_expr)
-                            elif best_result is None or abs(target - next_result) < abs(
-                                target - best_result[0]
+                            improvement = abs(target - best_result[0]) - abs(
+                                target - next_result
+                            )
+                            if improvement > 0 or (
+                                improvement == 0
+                                and len([expression] + next_expr) < len(best_result[1])
                             ):
                                 best_result = (next_result, [expression] + next_expr)
     return best_result
