@@ -11,29 +11,38 @@
     <style>
         body {
             margin: 0;
-            padding: 0;
             background-color: #f0f0f0;
-            overflow-x: hidden;
-            overflow-y: hidden;
+            overflow: hidden;
             font-family: "Roboto", sans-serif;
             font-weight: 100;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
             font-size: 60px;
             color: #333;
             margin: 20px 0;
             padding: 0 40px;
-            font-family: "Roboto", sans-serif;
             font-weight: 300;
         }
 
-        #numbers,
-        #letters {
-            width: calc(50% - 60px);
-            height: calc(100vh - 80px - 90px);
-            margin: 30px;
+        .container {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .box {
+            flex: 1;
+            max-width: 46%;
+            height: calc(100vh - 180px);
+            margin: 10px;
             padding: 20px;
             box-sizing: border-box;
             float: left;
@@ -45,9 +54,6 @@
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border-radius: 20px;
-            background: linear-gradient(to bottom, #efefef, #ddd);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
         }
 
         #numbers {
@@ -58,16 +64,15 @@
             background: linear-gradient(to bottom left, rgb(40, 40, 240), rgb(120, 120, 255));
         }
 
-        #numbers:hover,
-        #letters:hover {
+        .box:hover {
             transform: scale(1.05);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         #config-icon {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 3%;
+            right: 3%;
             font-size: 40px;
             cursor: pointer;
             color: #333;
@@ -80,7 +85,6 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
             background-color: rgba(0, 0, 0, 0.4);
             display: none;
             justify-content: center;
@@ -88,28 +92,23 @@
         }
 
         #modal-content {
-            background-color: #fefefe;
-            margin: auto;
+            background-color: rgb(220, 220, 220);
             padding: 20px;
-            border: 1px solid #888;
             width: 80%;
             max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
         }
 
         #close-btn {
             color: #aaa;
-            float: right;
             font-size: 28px;
             font-weight: bold;
+            float: right;
+            cursor: pointer;
         }
 
-        #close-btn:hover,
-        #close-btn:focus {
+        #close-btn:hover {
             color: black;
-            text-decoration: none;
-            cursor: pointer;
         }
 
         #config-form {
@@ -129,7 +128,6 @@
             width: 45%;
             font-weight: 400;
             color: #333;
-            text-align: center;
         }
 
         .config-section input {
@@ -137,8 +135,8 @@
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            text-align: center;
             font-size: 16px;
+            text-align: center;
         }
 
         .button-container {
@@ -162,23 +160,57 @@
             background-color: #45a049;
             transform: scale(1.05);
         }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .box {
+                max-width: 90%;
+                width: 90%;
+                height: calc(50vh - 80px);
+                margin: 10px auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 30px;
+                margin: 10px 0;
+            }
+
+            .box {
+                font-size: 30px;
+                height: calc(50vh - 60px);
+            }
+
+            #config-icon {
+                font-size: 30px;
+            }
+
+            #config-form button {
+                font-size: 16px;
+                padding: 10px 15px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <h1>Des chiffres et des lettres</h1>
-    <div id="numbers" onclick="location.href='/numbers'">Chiffres</div>
-    <div id="letters" onclick="location.href='/letters'">Lettres</div>
+    <div class="container">
+        <div id="numbers" class="box" onclick="location.href='/numbers'">Chiffres</div>
+        <div id="letters" class="box" onclick="location.href='/letters'">Lettres</div>
+    </div>
     <div id="config-icon" onclick="openConfigModal()">⚙️</div>
 
     <!-- Configuration Modal -->
     <div id="config-modal">
         <div id="modal-content">
             <span id="close-btn" onclick="closeConfigModal()">&times;</span>
-            <h2 style="text-align:center;">Configuration</h2>
-            <form id="config-form">
-                <!-- Configuration options will go here -->
-            </form>
+            <h2>Configuration</h2>
+            <form id="config-form"></form>
             <div class="button-container">
                 <button type="button" onclick="saveConfig()">Enregistrer</button>
             </div>
@@ -193,9 +225,7 @@
             extra_timer: 'Temps additionnel'
         };
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            fetchConfig();
-        });
+        document.addEventListener('DOMContentLoaded', fetchConfig);
 
         function openConfigModal() {
             document.getElementById('config-modal').style.display = 'flex';
@@ -214,23 +244,27 @@
                     ['numbers', 'letters'].forEach(section => {
                         if (data[section]) {
                             const sectionHeader = document.createElement('h3');
-                            sectionHeader.style.textAlign = 'center';
                             sectionHeader.textContent = translations[section] || section;
                             form.appendChild(sectionHeader);
+
                             const sectionDiv = document.createElement('div');
                             sectionDiv.className = 'config-section';
+
                             ['timer', 'extra_timer'].forEach(key => {
                                 if (data[section][key] !== undefined) {
                                     const label = document.createElement('label');
                                     label.textContent = translations[key] || key;
+
                                     const input = document.createElement('input');
                                     input.type = 'text';
                                     input.name = `${section}.${key}`;
                                     input.value = data[section][key];
+
                                     sectionDiv.appendChild(label);
                                     sectionDiv.appendChild(input);
                                 }
                             });
+
                             form.appendChild(sectionDiv);
                         }
                     });
@@ -243,13 +277,11 @@
             const config = {};
 
             formData.forEach((value, key) => {
-                const keys = key.split('.');
-                if (keys.length === 2) {
-                    if (!config[keys[0]]) {
-                        config[keys[0]] = {};
-                    }
-                    config[keys[0]][keys[1]] = value;
+                const [section, setting] = key.split('.');
+                if (!config[section]) {
+                    config[section] = {};
                 }
+                config[section][setting] = value;
             });
 
             fetch('/config', {

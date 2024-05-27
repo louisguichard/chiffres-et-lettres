@@ -12,17 +12,29 @@
             text-align: center;
             background-color: rgb(120, 120, 255);
             margin: 0;
-            padding-bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        #gameInfo {
-            margin-bottom: 40px;
+        main {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        h1 {
+            font-size: 70px;
+            margin: 20px;
         }
 
         #timer,
         #actions,
         #solution {
-            margin-top: 40px;
+            margin-top: 20px;
         }
 
         button {
@@ -78,6 +90,13 @@
             font-size: 26px;
         }
 
+        .home-button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
         .home-button {
             position: fixed;
             bottom: 10px;
@@ -111,67 +130,124 @@
         .home-button:hover {
             background-color: transparent;
         }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 40px;
+                margin: 10px;
+            }
+
+            #gameInfo,
+            #timer,
+            #actions,
+            #solution {
+                font-size: 32px;
+                margin: 20px;
+            }
+
+            button {
+                font-size: 22px;
+                padding: 15px 30px;
+            }
+
+            #timerBarContainer {
+                width: 60%;
+            }
+
+            .break-line {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 30px;
+                margin: 10px;
+            }
+
+            #gameInfo,
+            #timer,
+            #actions,
+            #solution {
+                font-size: 28px;
+                margin: 10px;
+            }
+
+            button {
+                font-size: 18px;
+                padding: 10px 20px;
+            }
+
+            #timerBarContainer {
+                width: 80%;
+            }
+
+            .break-line {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <h1>Le mot le plus long</h1>
-    <div id="gameInfo">
-        <p>Lettres disponibles : {{ letters|join(' - ') }}</p>
-    </div>
-    <div id="timer">Temps restant : {{ timers.default }}</div>
-    <div id="timerBarContainer">
-        <div id="timerBarFullSize">
-            <div id="timerBar"></div>
+    <main>
+        <h1>Le mot le plus long</h1>
+        <div id="gameInfo">
+            <p>Lettres disponibles :<span class="break-line"></span> {{ letters|join(' - ') }}</p>
         </div>
+        <div id="timer">Temps restant : {{ timers.default }}</div>
+        <div id="timerBarContainer">
+            <div id="timerBarFullSize">
+                <div id="timerBar"></div>
+            </div>
+        </div>
+        <div id="solution" style="display:none;">
+            {{ solution|safe }}
+        </div>
+        <div id="actions" style="display:none;">
+            <button onclick="location.reload()">Nouvelle Partie</button>
+            <button onclick="location.href='/numbers'">Jouer aux chiffres</button>
+        </div>
+        <button id="showSolutionButton" onclick="showSolution()">Montrer la solution</button>
+        <audio id="bellSound" src="/static/bell.wav" preload="auto"></audio>
+    </main>
+    <div class="home-button-container">
+        <button class="home-button" onclick="location.href='/'">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 3.2L2.8 32H12v29h16V45h8v16h16V32h9.2z" />
+            </svg>
+        </button>
     </div>
-    <div id="solution" style="display:none;">
-        {{ solution|safe }}
-    </div>
-    <div id="actions" style="display:none;">
-        <button onclick="location.reload()">Nouvelle Partie</button>
-        <button onclick="location.href='/numbers'">Jouer aux chiffres</button>
-    </div>
-    <button id="showSolutionButton" onclick="showSolution()">Montrer la solution</button>
-    <audio id="bellSound" src="/static/bell.wav" preload="auto"></audio>
-    <button class="home-button" onclick="location.href='/'">
-        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-            <path d="M32 3.2L2.8 32H12v29h16V45h8v16h16V32h9.2z" />
-        </svg>
-    </button>
 
     <script>
         const config = {
             timer: parseInt('{{ timers.timer }}', 10),
             extra_timer: parseInt('{{ timers.extra_timer }}', 10)
         };
-        let timeLeft = config.timer + config.extra_timer
+        let timeLeft = config.timer + config.extra_timer;
         const bell = document.getElementById('bellSound');
         const timerElement = document.getElementById('timer');
         const solutionElement = document.getElementById('solution');
         const actionsElement = document.getElementById('actions');
         const showSolutionButton = document.getElementById('showSolutionButton');
-        const finishedElement = document.createElement('div');
-        finishedElement.textContent = "Terminé!";
-        finishedElement.style.fontSize = "24px";
-        finishedElement.style.display = 'none';
-        document.body.insertBefore(finishedElement, actionsElement);
         timerElement.textContent = "Temps restant : " + timeLeft;
 
         bell.play();
         const countdown = setInterval(function () {
+            timeLeft -= 1;
             if (timeLeft === config.timer) {
                 bell.play();
             }
-            timeLeft -= 1;
-            timerElement.textContent = "Temps restant : " + timeLeft;
-            if (timeLeft <= 0) {
+            if (timeLeft == 0) {
+                timerBarContainer.style.display = 'none';
+                timerElement.textContent = "Terminé !";
                 bell.play();
                 clearInterval(countdown);
-                finishedElement.style.display = 'block';
+            } else {
+                timerElement.textContent = "Temps restant : " + timeLeft;
             }
             const timerBar = document.getElementById('timerBar');
-            const percentageComplete = ((config.timer + config.extra_timer - timeLeft) / (config.timer + config.extra_timer)) * 100;
+            const percentageComplete = ((config.timer + config.extra_timer - timeLeft + 1) / (config.timer + config.extra_timer)) * 100;
             timerBar.style.width = percentageComplete + '%';
             // Change bar color based on time left
             const percentageLeft = (timeLeft / (config.timer + config.extra_timer)) * 100;
@@ -189,6 +265,7 @@
             solutionElement.innerHTML = '<em>Solution<br>- - - - - - -<br></em>' + '<em>{{ solution|safe }}</em>';
             actionsElement.style.display = 'block';
             timerElement.style.display = 'none';
+            timerBarContainer.style.display = 'none';
             showSolutionButton.style.display = 'none';
             finishedElement.style.display = 'none';
             document.getElementById('timerBarContainer').style.display = 'none';
