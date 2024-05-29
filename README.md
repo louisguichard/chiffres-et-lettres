@@ -4,7 +4,7 @@ A family-friendly adaptation of the French game "Des chiffres et des lettres". E
 
 ## Want to play? 
 
-Try it now [here](https://chiffresetlettres.louisguichard.fr)!
+Try it now [here](https://deschiffresetdeslettres.louisguichard.fr)!
 
 ## Screenshots
 
